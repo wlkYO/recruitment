@@ -21,6 +21,7 @@ class Companyc
         header('Access-Control-Allow-Credentials: true');
         $companyLogic = new Company();
         $result = $companyLogic->getCompanyList($companName, $registerAddr);
+
         return $result;
     }
 
