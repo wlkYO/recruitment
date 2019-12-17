@@ -27,4 +27,9 @@ class Weblogin
         $ret = Db::table('recruit_user')->where($where)->find();
         return $ret;
     }
+
+    public function editpassword($where,$data){
+        $ret = Db::table('recruit_user')->where($where)->update($data);
+        return $ret;
+    }
 }

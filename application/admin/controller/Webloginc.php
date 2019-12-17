@@ -24,13 +24,15 @@ class Webloginc
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
         header('Access-Control-Allow-Credentials: true');
-//        $postData = json_decode(file_get_contents("php://input"), true);
-        $postData = json_decode('{"userid":"18382274650","password":"123456","email":"1562656817@qq.com"}', true);
+        $postData = json_decode(file_get_contents("php://input"), true);
+//        $postData = json_decode('{"password":"123456","email":"1562656817@qq.com"}', true);
        $login = new Weblogin();
        $ret = $login->login($postData);
        return $ret;
     }
 
+
+//    发送邮件进行验证
     public function sendmail(){
         header("Access-Control-Allow-Origin: *");
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -57,7 +59,7 @@ class Webloginc
         $toemail= $postData['email'];
         $to_name = Config::get('to_name');                  //设置收件人信息，如邮件格式说明中的收件人
         $title = Config::get('title');
-        $content = "欢迎注册******招聘网站，您的验证码为：【{$code}】";
+        $content = "尊敬的用户，欢迎使用***招聘网站，您的验证码为：【{$code}】";
 
         $sendmail = Config::get('send_email');     //发件人邮箱
         $sendmailpswd = Config::get('send_mailpswd');              //客户端授权密码,而不是邮箱的登录密码，就是手机发送短信之后弹出来的一长串的密码
@@ -97,7 +99,7 @@ class Webloginc
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
         header('Access-Control-Allow-Credentials: true');
         $postData = json_decode(file_get_contents("php://input"), true);
-//        $postData = json_decode('{"userid":"18382274650","password":"123456","email":"1562656817@qq.com","Verification_code":"945123"}', true);
+//        $postData = json_decode('{"role":3,"password":"123456","email":"1562656817@qq.com","Verification_code":"945123"}', true);
         $code = Cache::get('key');$code1 = $postData['Verification_code'];
         if (empty($code)){
             return array("resultcode" => -1, "resultmsg" => "验证码已过期，请在收到邮件一分钟之内输入", "data" => null);
@@ -109,5 +111,37 @@ class Webloginc
             $ret = $login->register($postData);
             return $ret;
         }
+    }
+
+//    验证码验证
+    public function yanzheng(){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $postData = json_decode(file_get_contents("php://input"), true);
+//        $postData = json_decode('{"Verification_code":"945123"}', true);
+        $code = Cache::get('key');$code1 = $postData['Verification_code'];
+        if (empty($code)){
+            return array("resultcode" => -1, "resultmsg" => "验证码已过期，请在收到邮件一分钟之内输入", "data" => null);
+        }
+        if ($code!=$code1){
+            return array("resultcode" => -1, "resultmsg" => "您所输入的验证码不正确！", "data" => null);
+        }else{
+            return array("resultcode" => 0, "resultmsg" => "操作成功！", "data" => null);
+        }
+    }
+
+//    修改密码
+    public function editpassword(){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $postData = json_decode(file_get_contents("php://input"), true);
+//        $postData = json_decode('{"email":"1562656817@qq.com","oldpassword":"945123","newpassword1":"123456","newpassword2"}', true);
+        $login = new Weblogin();
+        $ret = $login->editpassword($postData);
+        return $ret;
     }
 }
