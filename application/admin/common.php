@@ -22,7 +22,7 @@ define("MEM_CACHE_PWD","11211");
 //配置 memorycache 缓存时间 7*24*3600=604800
 define("MEM_CACHE_TIME",604800);
 //配置系统名
-define("CHAOGE_SYS_NAME","recruit");
+define("CHAOGE_SYS_NAME","recruit"); 
 //
 
 //生成token
