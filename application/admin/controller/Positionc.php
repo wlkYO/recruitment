@@ -76,4 +76,24 @@ class Positionc
         $ret = $user->getuser($role,$username,$page,$pagesize);
         return $ret;
     }
+
+    /**
+     * 查询职位类别
+     * @param string $token
+     * @return mixed
+     */
+
+    public function getjobType($token=''){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+//        $userInfo = checktoken($token);
+//        if (!$userInfo) {
+//            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+//        }
+        $user = new Position();
+        $ret = $user->getjobType();
+        return $ret;
+    }
 }

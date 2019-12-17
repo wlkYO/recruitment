@@ -27,4 +27,9 @@ class Resume
             ->delete($id);
         return $res;
     }
+
+    public function uploadResume($data){
+        $ret = Db::table('recruit_resume')->insert($data);
+        return $ret;
+    }
 }

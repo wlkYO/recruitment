@@ -9,7 +9,15 @@
 namespace app\admin\model;
 
 
-class position
-{
+use think\Db;
 
+class Position
+{
+    public function getjobType(){
+        $ret =Db::table('recruit_position_type')->where('pid',0)->field('id,typename')->select();
+       foreach ($ret as $k=>&$v){
+           $v['chldren'] = Db::table('recruit_position_type')->where('pid',$v['id'])->field('id,typename')->select();
+       }
+       return $ret;
+    }
 }

@@ -18,4 +18,14 @@ class Position
     public function updateposition($postdata){
 
     }
+
+    public function getjobType(){
+        $position = new \app\admin\model\Position();
+        $ret = $position->getjobType();
+        if ($ret){
+            return retmsg(0,$ret);
+        }else{
+            return retmsg(0);
+        }
+    }
 }

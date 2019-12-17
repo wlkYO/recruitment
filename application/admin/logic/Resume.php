@@ -32,7 +32,7 @@ class Resume
         }
     }
 
-    public function uploadResume($companyId, $positionId)
+    public function uploadResume1($companyId, $positionId)
     {
         set_time_limit(0);
 //        vendor("PHPExcel.Classes.PHPExcel");
@@ -76,5 +76,31 @@ class Resume
     public function deleteResumeFile($file_url)
     {
 
+    }
+
+    public function upload($userInfo){
+        // 获取表单上传文件 例如上传了001.jpg
+        $file = request()->file('file');
+        // 移动到框架应用根目录/public/uploads/ 目录下
+//        支持格式以及文件大小限制
+//        $res = $file->validate(['size'=>155678,'ext'=>'jpg,png']);
+        $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads');
+        if($info){
+            // 成功上传后 获取上传信息
+            $baseurl = "localhost:8888/recruitment/public/uploads/";
+            $data['create_name'] = $userInfo['name'];
+            $url = $baseurl.$info->getSaveName();
+            $data['file'] = $url;
+            $resume = new \app\admin\model\Resume();
+            $resume->uploadResume($data);
+            return retmsg(0);
+        }else{
+            return retmsg(-1);
+        }
+    }
+
+    public function uploadResume($userInfo){
+        $ret = $this->upload($userInfo);
+        return $ret;
     }
 }
