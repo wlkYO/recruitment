@@ -28,8 +28,18 @@ class Resume
         return $res;
     }
 
-    public function uploadResume($data){
+    public function uploadResume($data)
+    {
         $ret = Db::table('recruit_resume')->insert($data);
         return $ret;
+    }
+
+    public function selectResumeUrl($id)
+    {
+        $res = Db::table(self::$table)
+            ->field('file_url')
+            ->where('id', $id)
+            ->select();
+        return $res;
     }
 }

@@ -13,7 +13,7 @@ use app\admin\logic\Resume;
 
 class Resumec
 {
-    public function getResumeList($companyName = '', $position= '')
+    public function getResumeList($companyName = '', $position= '')  //查询
     {
         header("Access-Control-Allow-Origin: *");
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -24,7 +24,7 @@ class Resumec
         return $result;
     }
 
-    public function deleteResume($id){
+    public function deleteResume($id){   //删除
         header("Access-Control-Allow-Origin: *");
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');

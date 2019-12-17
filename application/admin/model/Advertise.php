@@ -13,8 +13,32 @@ use think\Db;
 
 class Advertise
 {
-    public function getAdverurl(){
-        $ret = Db::table('recruit_advertise')->field('id,url')->select();
+    private static $table = 'recruit_advertise';
+
+    public function getAdverurl()
+    {
+        $ret = Db::table('recruit_advertise')->field('id,advert_title,url')->select();
+        return $ret;
+    }
+
+    public function addAdvert($data)
+    {
+        $ret = Db::table(self::$table)
+            ->insert($data);
+        return $ret;
+    }
+
+    public function deleteAdvert($id)
+    {
+        $ret = Db::table(self::$table)
+            ->delete($id);
+        return $ret;
+    }
+
+    public function updateAdvert($data)
+    {
+        $ret = Db::table(self::$table)
+            ->update($data);
         return $ret;
     }
 }
