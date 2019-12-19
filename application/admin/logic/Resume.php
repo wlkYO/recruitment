@@ -89,7 +89,7 @@ class Resume
             $baseurl = "localhost:8888/recruitment/public/uploads/";
             $data['create_name'] = $userInfo['name'];
             $url = $baseurl . $info->getSaveName();
-            $data['file'] = $url;
+            $data['file_url'] = $url;
             $resume = new \app\admin\model\Resume();
             $resume->uploadResume($data);
             return retmsg(0);
