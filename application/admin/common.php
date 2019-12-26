@@ -40,7 +40,7 @@ function createToken($paramarr)
     }
     $nowtime = date("Y-m-d H:i:s",time());
     $tokenPars .= $nowtime;
-    $tokenPars .= $paramarr["manager"];
+    $tokenPars .= $paramarr["email"];
     $token = md5($tokenPars);
     $expiration = date("Y-m-d H:i:s",strtotime("+1 week",strtotime($nowtime)));
     $paramarr["token"] = $token;
@@ -61,7 +61,7 @@ function checktoken($token)
     else//token存在
     {
         $userinfo_arr = json_decode($userinfo,true);
-        $nowtoken = $cache->get($userinfo_arr["manager"] . CHAOGE_SYS_NAME . "uid-token");
+        $nowtoken = $cache->get($userinfo_arr["email"] . CHAOGE_SYS_NAME . "uid-token");
         if($nowtoken == $token && strtotime($userinfo_arr["expiration"]) >= strtotime(date("Y-m-d H:i:s")))
         {
             return $userinfo_arr;
@@ -71,12 +71,12 @@ function checktoken($token)
     }
 }
 
-function updatetoken($token,$uid,$userinfo)
+function updatetoken($token,$email,$userinfo)
 {
     $cache = new \Memcache;
     $cache->connect(MEM_CACHE_NAME, MEM_CACHE_PWD);
-    $oldtoken = $cache->get($uid . CHAOGE_SYS_NAME . "uid-token");
-    if($cache->set($uid . CHAOGE_SYS_NAME . "uid-token",$token,0,MEM_CACHE_TIME))
+    $oldtoken = $cache->get($email . CHAOGE_SYS_NAME . "uid-token");
+    if($cache->set($email . CHAOGE_SYS_NAME . "uid-token",$token,0,MEM_CACHE_TIME))
     {
         $cache->delete(CHAOGE_SYS_NAME . $oldtoken);
         if($cache->set(CHAOGE_SYS_NAME . $token,json_encode($userinfo),0,MEM_CACHE_TIME))

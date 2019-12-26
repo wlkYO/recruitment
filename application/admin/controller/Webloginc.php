@@ -99,7 +99,7 @@ class Webloginc
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
         header('Access-Control-Allow-Credentials: true');
         $postData = json_decode(file_get_contents("php://input"), true);
-//        $postData = json_decode('{"role":3,"password":"123456","email":"1562656817@qq.com","Verification_code":"945123"}', true);
+//        $postData = json_decode('{"password":"123456","email":"1562656817@qq.com","Verification_code":"945123"}', true);
         $code = Cache::get('key');$code1 = $postData['Verification_code'];
         if (empty($code)){
             return array("resultcode" => -1, "resultmsg" => "验证码已过期，请在收到邮件一分钟之内输入", "data" => null);
