@@ -87,7 +87,7 @@ class Resume
         if ($info) {
             // 成功上传后 获取上传信息
             $baseurl = "localhost:8888/recruitment/public/uploads/";
-            $data['create_name'] = $userInfo['name'];
+            $data['email'] = $userInfo['email'];
             $url = $baseurl . $info->getSaveName();
             $data['file_url'] = $url;
             $resume = new \app\admin\model\Resume();

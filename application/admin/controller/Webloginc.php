@@ -40,7 +40,6 @@ class Webloginc
         header('Access-Control-Allow-Credentials: true');
         $code = rand('100000','999999');        //六位随机数
         //收件人的邮箱
-//        验证邮箱是否已经被注册
         $postData = json_decode(file_get_contents("php://input"), true);
 //        $postData = json_decode('{"email":"1551848357@qq.com"}', true);
         $email = $postData['email'];
@@ -49,12 +48,24 @@ class Webloginc
         if (!$result){
             return array("resultcode" => -1, "resultmsg" => "邮箱格式不正确！", "data" => null);
         }
-        $where['email'] = $postData['email'];
-        $where['state'] = 1;
-        $login = new \app\admin\model\Weblogin();
-        $isexit = $login->iscunzai($where);
-        if ($isexit){
-            return array("resultcode" => -1, "resultmsg" => "您所输入的邮箱已被注册！", "data" => null);
+        $type=$postData['type'];
+//        验证邮箱是否已经被注册
+        if($type==1){
+            $where['email'] = $postData['email'];
+            $where['state'] = 1;
+            $login = new \app\admin\model\Weblogin();
+            $isexit = $login->iscunzai($where);
+            if ($isexit){
+                return array("resultcode" => -1, "resultmsg" => "您所输入的邮箱已被注册！", "data" => null);
+            }
+        }else{
+            $where['email'] = $postData['email'];
+            $where['state'] = 1;
+            $login = new \app\admin\model\Weblogin();
+            $isexit = $login->iscunzai($where);
+            if (!$isexit){
+                return array("resultcode" => -1, "resultmsg" => "您所输入的邮箱尚未注册！", "data" => null);
+            }
         }
         $toemail= $postData['email'];
         $to_name = Config::get('to_name');                  //设置收件人信息，如邮件格式说明中的收件人
@@ -142,6 +153,19 @@ class Webloginc
 //        $postData = json_decode('{"email":"1562656817@qq.com","oldpassword":"945123","newpassword1":"123456","newpassword2"}', true);
         $login = new Weblogin();
         $ret = $login->editpassword($postData);
+        return $ret;
+    }
+
+//    验证码登录
+    public function yanzhengLogin(){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $postData = json_decode(file_get_contents("php://input"), true);
+//        $postData = json_decode('{"Verification_code":"123456","email":"1562656817@qq.com"}', true);
+        $login = new Weblogin();
+        $ret = $login->yanzhengLogin($postData);
         return $ret;
     }
 }

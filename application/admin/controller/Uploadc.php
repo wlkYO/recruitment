@@ -6,10 +6,10 @@
  * Time: 14:50
  */
 
-namespace app\api\controller;
+namespace app\admin\controller;
 
-if (is_file('E:\wamp64\www\recuritment\extra\oss\autoload.php')) {
-    require_once 'E:\wamp64\www\recuritment\extra\oss\autoload.php';
+if (is_file('E:\wamp64\www\recuritment\application\extra\oss\autoload.php')) {
+    require_once 'E:\wamp64\www\recuritment\application\extra\oss\autoload.php';
 }
 use OSS\OssClient;
 use OSS\Core\OssException;

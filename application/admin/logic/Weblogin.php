@@ -9,6 +9,8 @@
 namespace app\admin\logic;
 use app\admin\model\Weblogin as WebloginModel;
 use PHPMailer\PHPMailer\PHPMailer;
+use think\Cache;
+use think\Db;
 
 class Weblogin
 {
@@ -23,12 +25,54 @@ class Weblogin
             $settoken["username"] = $ret["username"];
             $settoken["roleid"] = $ret["role"];
             $settoken["email"] = $ret["email"];
+            $settoken["company_id"] = $ret["company_id"];
+            $where1['email'] = $ret['email'];
+            $resume = Db::table('recruit_resume')->where($where1)->find();
+            if($resume){
+                $re = 1;
+            }else{
+                $re = 0;
+            }
             $token = createToken($settoken);
             updatetoken($token["token"],$settoken['email'],$token);
-            $res = array("token"=>$token["token"],"role"=>$ret["role"],"username"=>$ret["username"]);
+            $res = array("token"=>$token["token"],"role"=>$ret["role"],"username"=>$ret["username"],"company_id"=>$ret["company_id"],"header_img"=>$ret['header_img'],"nickname"=>$ret['nickname'],"sex"=>$ret['sex'],"is_upload"=>$re);
             return retmsg(0,$res,"操作成功");
         }else{
             return array("resultcode" => -1, "resultmsg" => "您所输入的账号或密码错误！", "data" => null);
+        }
+    }
+
+    public function yanzhengLogin($postdata){
+        $where["email"] = $postdata["email"];
+        $where["state"] = 1;
+        $login = new WebloginModel();
+        $ret = $login->iscunzai($where);
+        if(!$ret){
+            return array("resultcode" => -1, "resultmsg" => "您所输入的邮箱尚未注册！", "data" => null);
+        }
+        $code = Cache::get('key');$code1 = $postdata['Verification_code'];
+        if (empty($code)){
+            return array("resultcode" => -1, "resultmsg" => "验证码已过期，请在收到邮件一分钟之内输入", "data" => null);
+        }
+        if ($code!=$code1){
+            return array("resultcode" => -1, "resultmsg" => "您所输入的验证码不正确！", "data" => null);
+        }else{
+                Cache::clear();
+                $settoken["username"] = $ret["username"];
+                $settoken["roleid"] = $ret["role"];
+                $settoken["email"] = $ret["email"];
+                $settoken["company_id"] = $ret["company_id"];
+                $token = createToken($settoken);
+                updatetoken($token["token"],$settoken['email'],$token);
+                $where1['email'] = $ret['email'];
+                $resume = Db::table('recruit_resume')->where($where1)->find();
+                if($resume){
+                    $re = 1;
+                }else{
+                    $re = 0;
+                }
+                $res = array("token"=>$token["token"],"role"=>$ret["role"],"username"=>$ret["username"],"company_id"=>$ret["company_id"],"header_img"=>$ret['header_img'],"nickname"=>$ret['nickname'],"sex"=>$ret['sex'],"is_upload"=>$re);
+                return retmsg(0,$res,"操作成功");
         }
     }
 
@@ -45,6 +89,7 @@ class Weblogin
         $login = new WebloginModel();
         $ret = $login->register($data);
         if ($ret){
+            Cache::clear();
             return retmsg(0);
         }else{
             return retmsg(-1);
@@ -53,7 +98,7 @@ class Weblogin
 
     public function editpassword($postdata){
         if($postdata['newpassword1']!=$postdata['newpassword2']){
-            return array("resultcode" => -1, "resultmsg" => "确认密码和新密码不一致！", "data" => null);
+            return array("resultcode" => -1, "resultmsg" => "旧密码和新密码不一致！", "data" => null);
         }
         $data['password'] = md5($postdata['newpassword1']);
         $where['email'] = $postdata['email'];
