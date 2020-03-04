@@ -103,4 +103,25 @@ class Resume
         $ret = $this->upload($userInfo);
         return $ret;
     }
+
+    public function getResume($page,$pagesize){
+        $model = new \app\admin\model\Resume();
+        $ret =$model->getResume($page,$pagesize);
+        if ($ret) {
+            return retmsg(0,$ret);
+        } else {
+            return retmsg(0);
+        }
+    }
+
+    public function delResume($data){
+        $where['id'] = $data['id'];
+        $position = new \app\admin\model\Resume();
+        $ret = $position->delResume($where);
+        if ($ret){
+            return retmsg(0);
+        }else{
+            return retmsg(-1);
+        }
+    }
 }

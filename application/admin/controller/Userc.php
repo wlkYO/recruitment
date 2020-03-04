@@ -21,12 +21,12 @@ class Userc
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
         header('Access-Control-Allow-Credentials: true');
-//        $userInfo = checktoken($token);
-//        if (!$userInfo) {
-//            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
-//        }
-//        $postData = json_decode(file_get_contents("php://input"), true);
-        $postData = json_decode('{"id":1,"userid":"18382274650","username":"帅哥袁1","password":"123456","email":"1562656817@qq.com"}', true);
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $postData = json_decode(file_get_contents("php://input"), true);
+//        $postData = json_decode('{"id":1,"roleid":"1"}', true);
         $user = new User();
         if (array_key_exists("id", $postData)){
             $ret = $user->updateuser($postData);
@@ -46,12 +46,12 @@ class Userc
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
         header('Access-Control-Allow-Credentials: true');
-//        $userInfo = checktoken($token);
-//        if (!$userInfo) {
-//            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
-//        }
-        //        $postData = json_decode(file_get_contents("php://input"), true);
-        $postData = json_decode('{"id":1}', true);
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $postData = json_decode(file_get_contents("php://input"), true);
+//        $postData = json_decode('{"id":1}', true);
         $user = new User();
         $ret = $user->deluser($postData);
         return $ret;
@@ -62,17 +62,17 @@ class Userc
      * @param string $token
      * @return mixed
      */
-    public function getuser($token='',$role='',$username='',$page=1,$pagesize=10){
+    public function getuser($token='',$role='',$email='',$page=1,$pagesize=10){
         header("Access-Control-Allow-Origin: *");
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
         header('Access-Control-Allow-Credentials: true');
-//        $userInfo = checktoken($token);
-//        if (!$userInfo) {
-//            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
-//        }
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
         $user = new User();
-        $ret = $user->getuser($role,$username,$page,$pagesize);
+        $ret = $user->getuser($role,$email,$page,$pagesize);
         return $ret;
     }
 

@@ -57,7 +57,7 @@ class WebUserc
         $user = new WebUser();
         $where = [];
         if(!empty($name)){
-            $where['a.name'] = array('like',"%$name%");
+            $where['a.name|a.industry|c.nickname'] = array('like',"%$name%");
         }
         if(!empty($address)){
             $where['a.address'] = array('like',"%$address%");
@@ -71,7 +71,7 @@ class WebUserc
         if(!empty($xueli)){
             $where['a.xueli'] = $xueli;
         }
-        $ret = $user->getPosition($where,$page,$pagesize,$timetype);
+        $ret = $user->getPosition($where,$page,$pagesize,$timetype,$name);
         return $ret;
     }
 
@@ -107,7 +107,7 @@ class WebUserc
     }
 
 //    已发布职位
-    public function personalPosition($token=''){
+    public function personalPosition($token='',$page=1,$pagesize=10){
         header("Access-Control-Allow-Origin: *");
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
@@ -117,18 +117,18 @@ class WebUserc
             return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
         }
         $user = new WebUser();
-        $ret = $user->personalPosition($userInfo);
+        $ret = $user->personalPosition($userInfo,$page,$pagesize);
         return $ret;
     }
 
 //    根据职位大类获取职位列表
-    public function positionBigtype($id=''){
+    public function positionBigtype($id='',$page=1,$pagesize=10){
         header("Access-Control-Allow-Origin: *");
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
         header('Access-Control-Allow-Credentials: true');
         $user = new WebUser();
-        $ret = $user->positionBigtype($id);
+        $ret = $user->positionBigtype($id,$page,$pagesize);
         return $ret;
     }
 
@@ -162,7 +162,7 @@ class WebUserc
 
 
 //    招聘者查看求职者给自己的留言
-    public function getLiuyan($token=''){
+    public function getLiuyan($token='',$page=1,$pagesize=10){
         header("Access-Control-Allow-Origin: *");
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
@@ -172,7 +172,7 @@ class WebUserc
         if (!$userInfo) {
             return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
         }
-        $ret = $user->getLiuyan($userInfo);
+        $ret = $user->getLiuyan($userInfo,$page,$pagesize);
         return $ret;
     }
 
@@ -209,4 +209,141 @@ class WebUserc
         $ret = $user->uploadResume($postData,$userInfo);
         return $ret;
     }
+
+//    求职者下载自己简历
+    public function downloadResume($token=''){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $user = new WebUser();
+        $ret = $user->downloadResume($userInfo);
+        return $ret;
+    }
+//    求职者查看我的收藏
+    public function getCollection($token='',$page=1,$pagesize=10){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $user = new WebUser();
+        $ret = $user->getCollection($userInfo,$page,$pagesize);
+        return $ret;
+    }
+
+//    投递简历
+    public function delivery($token=''){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $postData = json_decode(file_get_contents("php://input"), true);
+//        $postData = json_decode('{"position_id":2}', true);
+        $user = new WebUser();
+        $ret = $user->delivery($postData,$userInfo);
+        return $ret;
+    }
+
+//    求职者查看我的投递
+    public function getDelivery($token='',$page=1,$pagesize=10){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $user = new WebUser();
+        $ret = $user->getDelivery($userInfo,$page,$pagesize);
+        return $ret;
+    }
+
+//    招聘者查看自己收到的简历
+    public function getResume($token='',$page=1,$pagesize=10){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $user = new WebUser();
+        $ret = $user->getResume($userInfo,$page,$pagesize);
+        return $ret;
+    }
+
+//    求职者查看自己的留言
+    public function getQLiuyan($token='',$page=1,$pagesize=10){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $user = new WebUser();
+        $ret = $user->getQLiuyan($userInfo,$page,$pagesize);
+        return $ret;
+    }
+
+//    移出收藏/留言/投递
+    public function delCollection($token=''){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $postData = json_decode(file_get_contents("php://input"), true);
+//        $postData = json_decode('{"id":2,"type":"sc"}', true);
+        $user = new WebUser();
+        $ret = $user->delCollection($postData);
+        return $ret;
+    }
+
+//    热门搜索
+    public function getHotsearch(){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $user = new WebUser();
+        $ret = $user->getHotsearch();
+        return $ret;
+    }
+
+//    招聘者移除发布的职位
+    public function delPosition($token=''){
+        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
+        header('Access-Control-Allow-Credentials: true');
+        $userInfo = checktoken($token);
+        if (!$userInfo) {
+            return array("resultcode" => -2, "resultmsg" => "用户令牌失效，请重新登录", "data" => null);
+        }
+        $postData = json_decode(file_get_contents("php://input"), true);
+//        $postData = json_decode('{"id":2,"type":"sc"}', true);
+        $user = new WebUser();
+        $ret = $user->delPosition($postData);
+        return $ret;
+    }
+
 }
