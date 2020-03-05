@@ -1,5 +1,5 @@
 // 基础地址
-httpUrl = 'http://localhost:80/recruitment/public/index.php'; //公共基础地址
+httpUrl = 'http://localhost:80/recuritment/public/index.php'; //公共基础地址
 
 $(function () {
     // 加载头部和底部

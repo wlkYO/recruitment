@@ -13,13 +13,20 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => 'localhost',
+//    'hostname'        => 'localhost',
+//    // 数据库名
+//    'database'        => 'recruitment',
+//    // 用户名
+//    'username'        => 'root',
+//    // 密码
+//    'password'        => '',
+    'hostname'        => '121.42.231.8',
     // 数据库名
     'database'        => 'recruitment',
     // 用户名
     'username'        => 'root',
     // 密码
-    'password'        => 'root',
+    'password'        => 'wlkYO123.',
     // 端口
     'hostport'        => '3306',
     // 连接dsn
